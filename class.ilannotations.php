@@ -22,6 +22,7 @@ class ILAnnotations {
         add_shortcode( 'annot-e', array( 'ILAnnotations', 'annot_end_shortcode' ) );
         add_filter( 'pre_comment_content' , array( 'ILAnnotations', 'pre_comment_content_handle_annotation'), 11 ); //pre_comment_content
         add_action( 'wp_insert_comment', array( 'ILAnnotations', 'wp_insert_comment_handle_annotation'), 10, 2 );
+        add_filter( 'option_page_comments' , array( 'ILAnnotations', 'option_page_comments_handle') );
         
 	}
     
@@ -31,9 +32,13 @@ class ILAnnotations {
 			wp_enqueue_style( 'jquery.qtip.min.css');
 			wp_register_style( 'Annotations.css', ILANNOTATIONS__PLUGIN_URL . '_inc/Annotations.css', array(), ILANNOTATIONS_VERSION );
 			wp_enqueue_style( 'Annotations.css');
-            
+
+            wp_register_script( 'detectmobilebrowser.js', ILANNOTATIONS__PLUGIN_URL . '_inc/detectmobilebrowser.js', array('jquery'), ILANNOTATIONS_VERSION );
+            wp_enqueue_script( 'detectmobilebrowser.js' );
             wp_register_script( 'jQuery.highlighter.js', ILANNOTATIONS__PLUGIN_URL . '_inc/jQuery.highlighter.js', array('jquery'), ILANNOTATIONS_VERSION );
 			wp_enqueue_script( 'jQuery.highlighter.js' );
+            wp_register_script( 'jquery.query-object.js', ILANNOTATIONS__PLUGIN_URL . '_inc/jquery.query-object.js', array('jquery'), ILANNOTATIONS_VERSION );
+            wp_enqueue_script( 'jquery.query-object.js' );
             wp_register_script( 'jquery.qtip.min.js', 'http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js', array('jquery'), ILANNOTATIONS_VERSION );
 			wp_enqueue_script( 'jquery.qtip.min.js' );
 			wp_register_script( 'Anotations.js', ILANNOTATIONS__PLUGIN_URL . '_inc/Anotations.js', array('jquery'), ILANNOTATIONS_VERSION );
@@ -61,7 +66,7 @@ class ILAnnotations {
         );
         
         if($c && wp_get_comment_status($c) == 'approved'){
-            return('<a name="annot-start-'.$c.'" class="annot-start"></a>'.$content);   
+            return('<span id="annot-start-'.$c.'" class="annot-start"></span>'.$content);
         }else{
             return($content);  
         }
@@ -76,7 +81,7 @@ class ILAnnotations {
         );
         
         if($c && wp_get_comment_status($c) == 'approved'){
-            return('<a name="annot-stop-'.$c.'" class="annot-stop"></a>'.$content);   
+            return('<span id="annot-stop-'.$c.'" class="annot-stop"></span>'.$content);
         }else{
             return($content);  
         }
@@ -104,6 +109,13 @@ class ILAnnotations {
               );
             wp_update_post ($new_post);
         }
+    }
+
+    public static function option_page_comments_handle($default){
+        if(isset($_GET["comments_all"])){
+            return false;
+        }
+        return $default;
     }
         
 }
