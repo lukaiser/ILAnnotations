@@ -28,7 +28,7 @@ class ILAnnotations {
     
     public static function load_resources() {
             
-            wp_register_style( 'jquery.qtip.min.css', 'http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css', array(), ILANNOTATIONS_VERSION );
+            wp_register_style( 'jquery.qtip.min.css', 'https://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css', array(), ILANNOTATIONS_VERSION );
 			wp_enqueue_style( 'jquery.qtip.min.css');
 			wp_register_style( 'Annotations.css', ILANNOTATIONS__PLUGIN_URL . '_inc/Annotations.css', array(), ILANNOTATIONS_VERSION );
 			wp_enqueue_style( 'Annotations.css');
@@ -39,7 +39,7 @@ class ILAnnotations {
 			wp_enqueue_script( 'jQuery.highlighter.js' );
             wp_register_script( 'jquery.query-object.js', ILANNOTATIONS__PLUGIN_URL . '_inc/jquery.query-object.js', array('jquery'), ILANNOTATIONS_VERSION );
             wp_enqueue_script( 'jquery.query-object.js' );
-            wp_register_script( 'jquery.qtip.min.js', 'http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js', array('jquery'), ILANNOTATIONS_VERSION );
+            wp_register_script( 'jquery.qtip.min.js', 'https://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.js', array('jquery'), ILANNOTATIONS_VERSION );
 			wp_enqueue_script( 'jquery.qtip.min.js' );
 			wp_register_script( 'Anotations.js', ILANNOTATIONS__PLUGIN_URL . '_inc/Anotations.js', array('jquery'), ILANNOTATIONS_VERSION );
 			
