@@ -81,3 +81,6 @@
 .qtip .annot-comment:before{
     margin: -7px 10px 0 6px;
 }
+.qtip-close{
+    right: 5px;
+}
