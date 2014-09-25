@@ -102,7 +102,7 @@
                 at: 'bottom center',
                 viewport: $(window),
                 adjust: {
-                    method: 'shift shift'
+                    method: 'shift none'
                 }
             },
             style: {
