@@ -70,26 +70,30 @@
                 $( ".annot-"+$(this).prop("cid") ).removeClass( "annot-highlight" );
             }
         );
+        var buttonYes = ('ontouchstart' in window || navigator.msMaxTouchPoints);
         $( w ).qtip({
-            content: function(event, api) {
-                var cid = $(this).prop("cid");
-                if($("#li-comment-"+cid).length > 0){
-                    var html = $("#li-comment-"+cid).html();
-                }else{
-                    $.ajax({
-                        url: jQuery.query.set("comments_all", 1)
-                    })
-                    .then(function(content) {
-                        // Set the tooltip content upon successful retrieval
-                        api.set('content.text', $("#li-comment-"+cid, content));
-                    }, function(xhr, status, error) {
-                        // Upon failure... set the tooltip content to the status and error value
-                        api.set('content.text', status + ': ' + error);
-                    });
+            content:{
+                text: function(event, api) {
+                    var cid = $(this).prop("cid");
+                    if($("#li-comment-"+cid).length > 0){
+                        var html = $("#li-comment-"+cid).html();
+                    }else{
+                        $.ajax({
+                            url: jQuery.query.set("comments_all", 1)
+                        })
+                        .then(function(content) {
+                            // Set the tooltip content upon successful retrieval
+                            api.set('content.text', $("#li-comment-"+cid, content));
+                        }, function(xhr, status, error) {
+                            // Upon failure... set the tooltip content to the status and error value
+                            api.set('content.text', status + ': ' + error);
+                        });
 
-                    return 'Loading...';
-                }
-                return('<ol class="commentlist">'+html+'</ol>');
+                        return 'Loading...';
+                    }
+                    return('<ol class="commentlist">'+html+'</ol>');
+                },
+                button: buttonYes
             },
             hide: { event: 'mouseleave', fixed: true, delay:200 },
 
