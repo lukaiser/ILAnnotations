@@ -99,7 +99,11 @@
 
             position: {
                 my: 'top center',
-                at: 'bottom center'
+                at: 'bottom center',
+                viewport: $(window),
+                adjust: {
+                    method: 'shift shift'
+                }
             },
             style: {
                 classes: 'qtip-light qtip-shadow'
