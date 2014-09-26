@@ -80,6 +80,7 @@
 
 .qtip .annot-comment{
     padding-top: 12px;
+    display: none;
 }
 .qtip .annot-comment:before{
     margin: -7px 10px 0 -35px;
