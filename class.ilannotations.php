@@ -107,7 +107,7 @@ class ILAnnotations {
                   'ID'           => $postid,
                   'post_content' => $nc
               );
-            wp_update_post ($new_post);
+            wp_update_post (add_magic_quotes($new_post));
         }
     }
 
