@@ -24,7 +24,10 @@
 .annot-comment{
     min-height: 25px;
     background: #EEEEEE;
-    padding-top: 4px;
+    padding-top: 10px;
+    padding-left: 40px;
+    padding-bottom: 10px;
+    padding-right: 10px;
 }
 .even .annot-comment{
     background: #FFFFFF;
@@ -37,7 +40,7 @@
     float: left;
     width: 25px;
     height: 25px;
-    margin: -2px 10px 0 3px;
+    margin: -3px 10px 0 -35px;
     background: url(icon.png) 0 0;
 }
 .annot-comment:hover:before,
@@ -79,8 +82,11 @@
     padding-top: 12px;
 }
 .qtip .annot-comment:before{
-    margin: -7px 10px 0 6px;
+    margin: -7px 10px 0 -35px;
 }
 .qtip-close{
     right: 5px;
+}
+.qtip .commentlist{
+    line-height: normal;
 }
