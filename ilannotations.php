@@ -4,9 +4,9 @@
  */
 /*
 Plugin Name: ILAnnotations
-Plugin URI: http://ethz.ch
-Description: Blabla
-Version: 0.0.1
+Plugin URI: https://github.com/lukaiser/ILAnnotations
+Description: Adds the Annotation functionality to the existing commenting system of Wordpress
+Version: 0.9.0
 Author: Lukas Kaiser
 Author URI: http://emperor.ch
 */
@@ -18,7 +18,7 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-define( 'ILANNOTATIONS_VERSION', '0.0.1' );
+define( 'ILANNOTATIONS_VERSION', '0.9.0' );
 define( 'ILANNOTATIONS__MINIMUM_WP_VERSION', '3.0' );
 define( 'ILANNOTATIONS__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'ILANNOTATIONS__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

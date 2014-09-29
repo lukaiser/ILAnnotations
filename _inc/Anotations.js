@@ -8,31 +8,41 @@
 
     // Listen for the jQuery ready event on the document
     $(function() {
+        // Check if comments are enabled
         if(WPILAnnotations.commentsON){
+            //Add Annotation Button
             $('body').append('<span class="highlighter-container"><div><a href="#respond"><span class="annot-hide">Comment</span></a></div></span>');
+            //Initiate the highlighter
             $('.entry-content').highlighter({
                 'selector': '.highlighter-container',
                 'minWords': 0,
                 'complete': function (data) {
                 }
             });
+            //Add function to Annotation Button
             $('.highlighter-container a').mousedown(comment);
         }
 
+        //Prepare existing comments
         $('.annot-start').each(annot);
         $('.annot-comment').each(existingcomments);
 
     });
-
+    /*
+     * Handles the mouse down on the Annotation Button
+     */
     function comment() {
+        //Disselect all highlighted annotations
         $( ".annot").removeClass( "annot-highlight");
+        //Hide the comment button
         $('.highlighter-container').hide();
+        //Scroll to the comment form
         $(document).scrollTop( $("#respond").offset().top );
 
         var html = $('.highlighter-container').data("htmlSel");
 
         if(html != ''){
-
+            //Add form fields to the comment form
             if($(".comment-form-quote").length == 0){
                 $(".comment-form-comment").before( '<p class="comment-form-quote"></p>' );
             }
@@ -56,13 +66,20 @@
             $("#comment_quote_after").attr("value", htmlAfter);
         }
     }
-
+    /*
+     * Display existing comments in the text
+     */
     function annot(){
+        //get comment id
         var id = $(this).attr('id');
         id = id.substring(12);
+        //add a span around the annotation (multiple if necessary)
         $(this).nextUntilExtended('#annot-stop-'+id).wrap('<span class="annot annot-'+id+'"/>');
+        //get all wrapper spans
         w = $('.annot-'+id);
+        //add id
         w.prop("cid", id);
+        //on roll over highlight all wrapper spans
         w.hover(
             function() {
                 $( ".annot-"+$(this).prop("cid")).addClass( "annot-highlight");
@@ -70,7 +87,9 @@
                 $( ".annot-"+$(this).prop("cid") ).removeClass( "annot-highlight" );
             }
         );
+        //if touch device add close button to qtip
         var buttonYes = ('ontouchstart' in window || navigator.msMaxTouchPoints);
+        //add qtip with the comment
         $( w ).qtip({
             content:{
                 text: function(event, api) {
@@ -78,6 +97,7 @@
                     if($("#li-comment-"+cid).length > 0){
                         var html = $("#li-comment-"+cid).html();
                     }else{
+                        //if commetn is not loaded yet, load it
                         $.ajax({
                             url: jQuery.query.set("comments_all", 1)
                         })
@@ -111,6 +131,7 @@
         });
     }
     function existingcomments(){
+        //on click on quote jump to the annotation and highlight it
         $(this).mouseup(function() {
             var id = $(this).parents('.comment').attr('id');
             id  = id.substring(11);
@@ -124,6 +145,11 @@
     (function($){
 
         $.fn.extend({
+            /*
+             * Get everything till
+             * @param the end of the selection
+             * @return
+             */
             nextUntilExtended: function(until) {
                 var $set = $();
                 var nxt = this.get(0).nextSibling;
