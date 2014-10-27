@@ -32,7 +32,8 @@ class ILAnnotations {
         add_filter( 'pre_comment_content' , array( 'ILAnnotations', 'pre_comment_content_handle_annotation'), 11 ); //pre_comment_content
         add_action( 'wp_insert_comment', array( 'ILAnnotations', 'wp_insert_comment_handle_annotation'), 10, 2 );
         add_filter( 'option_page_comments' , array( 'ILAnnotations', 'option_page_comments_handle') );
-        
+        add_filter( 'the_content', array( 'ILAnnotations', 'add_marker_to_content' ), 1 );
+
 	}
 
     /**
@@ -137,12 +138,44 @@ class ILAnnotations {
         if(array_key_exists("comment_quote", $_POST)){
             $postid = $comment->comment_post_ID;
             $post = get_post( $postid );
+
+            $content = $post->post_content;
+
+            $idprev = intval($_POST["comment_quote_idprev"]);
+            $idafter = intval($_POST["comment_quote_idafter"]);
+
+            $elements = preg_split('/\n\s*\n/', $content, -1, PREG_SPLIT_NO_EMPTY);
+            if($idprev > 0){
+                $elements[$idprev-1] = $elements[$idprev-1].'[ILAS-aasdfklahsdkfahslödfkahsdöf]';
+            }
+            if($idafter > 0){
+                $elements[$idafter-1] = $elements[$idafter-1].'[ILAS-aasdfklahsdkfahslödfkahsdöf]';
+            }
+
+            $content = implode("\n\n", $elements);
+
+            if(!($idprev > 0)){
+                $content = '[ILAS-aasdfklahsdkfahslödfkahsdöf]'.$content;
+            }
+            if(!($idafter > 0)){
+                $content = $content.'[ILAS-aasdfklahsdkfahslödfkahsdöf]';
+            }
+
+            $contents = explode('[ILAS-aasdfklahsdkfahslödfkahsdöf]', $content);
+
+
             require_once('class.ilannotations-searchmanager.php' );
             //find the right regex expression to add the shortcodes
-            $sm = new ILAnnotations_Searchmanager($_POST["comment_quote"], $post->post_content, $_POST["comment_quote_prev"], $_POST["comment_quote_after"]);
+            $sm = new ILAnnotations_Searchmanager($_POST["comment_quote"], $contents[1], $_POST["comment_quote_prev"], $_POST["comment_quote_after"]);
             $rg = $sm->solve();
             //add the shortcodes to the content
-            $nc = preg_replace($rg, '$1[annot-s c="'.$id.'"/]$2[annot-e c="'.$id.'"/]$3', $post->post_content);
+            if($rg !== false && $rg != ""){
+                $contents[1] = preg_replace($rg, '$1[annot-s c="'.$id.'"/]$2[annot-e c="'.$id.'"/]$3', $contents[1]);
+            }else{
+                $contents[1] = '[annot-s c="'.$id.'"/]'.$contents[1].'[annot-e c="'.$id.'"/]';
+            }
+            $nc = implode("", $contents);
+
             //save the post
             $new_post = array(
                   'ID'           => $postid,
@@ -164,6 +197,17 @@ class ILAnnotations {
             return false;
         }
         return $default;
+    }
+
+    public static function add_marker_to_content($content){
+        $elements = preg_split('/\n\s*\n/', $content, -1, PREG_SPLIT_NO_EMPTY);
+        $i = 1;
+        foreach($elements as &$element){
+            $element = $element.'<span id="ILAS-'.$i.'" class="ILAS"></span>';
+            $i ++;
+        }
+        $content = implode("\n\n", $elements);
+        return $content;
     }
         
 }

@@ -198,15 +198,29 @@
                             //GET CONTENT
                             $(settings.selector).data("htmlSel", selText);
 
+                            var preve = $(sel.getRangeAt(0).startContainer).prevOf(".ILAS").get(0);
+                            if(!preve){
+                                preve = $('#content').get(0);
+                            }else{
+                                $(settings.selector).data("idPrev", preve.id.split("-")[1]);
+                            }
+
                             var prev = document.createRange();
-                            prev.setStart($('#content').get(0),0)
+                            prev.setStart(preve,0)
                             prev.setEnd(sel.getRangeAt(0).startContainer, sel.getRangeAt(0).startOffset);
                             var htmlPrev = getHtmlFromRange(prev);
                             $(settings.selector).data("htmlPrev", htmlPrev);
 
+                            var aftere = $(sel.getRangeAt(sel.rangeCount-1).endContainer).nextOf(".ILAS").get(0);
+                            if(!aftere){
+                                aftere = $('#content').get(0);
+                            }else{
+                                $(settings.selector).data("idAfter", aftere.id.split("-")[1]);
+                            }
+
                             var after = document.createRange();
                             after.setStart(sel.getRangeAt(sel.rangeCount-1).endContainer, sel.getRangeAt(sel.rangeCount-1).endOffset);
-                            after.setEnd($('#content').get(0), $('#content').get(0).childNodes.length);
+                            after.setEnd(aftere, aftere.childNodes.length);
                             var htmlAfter = getHtmlFromRange(after);
                             $(settings.selector).data("htmlAfter", htmlAfter);
 

@@ -53,15 +53,27 @@
             }
             $("#comment_quote").attr("value", html);
 
+            var idPrev = $('.highlighter-container').data("idPrev");
+            if($("#comment_quote_idprev").length == 0){
+                $("#comment_quote").after('<input type="hidden" name="comment_quote_idprev" id="comment_quote_idprev">');
+            }
+            $("#comment_quote_idprev").attr("value", idPrev);
+
             var htmlPrev = $('.highlighter-container').data("htmlPrev");
             if($("#comment_quote_prev").length == 0){
                 $("#comment_quote").after('<input type="hidden" name="comment_quote_prev" id="comment_quote_prev">');
             }
             $("#comment_quote_prev").attr("value", htmlPrev);
 
+            var idAfter = $('.highlighter-container').data("idAfter");
+            if($("#comment_quote_idafter").length == 0){
+                $("#comment_quote").after('<input type="hidden" name="comment_quote_idafter" id="comment_quote_idafter">');
+            }
+            $("#comment_quote_idafter").attr("value", idAfter);
+
             var htmlAfter = $('.highlighter-container').data("htmlAfter");
             if($("#comment_quote_after").length == 0){
-                $("#comment_quote_prev").after('<input type="hidden" name="comment_quote_after" id="comment_quote_after">');
+                $("#comment_quote").after('<input type="hidden" name="comment_quote_after" id="comment_quote_after">');
             }
             $("#comment_quote_after").attr("value", htmlAfter);
         }
@@ -74,7 +86,15 @@
         var id = $(this).attr('id');
         id = id.substring(12);
         //add a span around the annotation (multiple if necessary)
-        $(this).nextUntilExtended('#annot-stop-'+id).wrap('<span class="annot annot-'+id+'"/>');
+        //$(this).nextUntilExtended('#annot-stop-'+id).wrap('<span class="annot annot-'+id+'"/>');
+        var e = $(this).nextUntilExtended('#annot-stop-'+id);
+        e.filter(function() {
+            return this.nodeType === 3; //Node.TEXT_NODE
+        }).wrap('<span class="annot annot-'+id+'"/>');
+        e.contents()
+            .filter(function() {
+                return this.nodeType === 3; //Node.TEXT_NODE
+            }).wrap('<span class="annot annot-'+id+'"/>');
         //get all wrapper spans
         w = $('.annot-'+id);
         //add id
@@ -152,22 +172,70 @@
              */
             nextUntilExtended: function(until) {
                 var $set = $();
-                var nxt = this.get(0).nextSibling;
-                while(nxt) {
-                    if(!$(nxt).is(until)) {
-                        if(nxt.nodeType != 3 && $(nxt).has(until)){
+                var nxt = this.get(0);
+                var notin = true;
+                while(nxt){
+                    if($(nxt).is(until) && !notin) {
+                        break;
+                    }else{
+                        var found = $(nxt).find(until)
+                        if(!notin && found.length > 0){
                             nxt = nxt.firstChild;
-                        }else{
+                        }else if(nxt.nextSibling){
+                            nxt = nxt.nextSibling;
                             $set.push(nxt);
-                            if(nxt.nextSibling){
-                                nxt = nxt.nextSibling;
-                            }else{
-                                nxt = nxt.parentNode.nextSibling;
-                            }
+                            notin = false;
+                        }else{
+                            nxt = nxt.parentNode;
+                            notin = true;
                         }
-                    } else break;
+                    }
                 }
                 return($set);
+            },
+
+            nextOf: function(type) {
+                var nxt = this.get(0);
+                var notin = true;
+                while(nxt){
+                    if($(nxt).is(type) && !notin) {
+                        return $([nxt]);
+                    }else{
+                        var found = $(nxt).find(type)
+                        if(!notin && found.length > 0){
+                            return found.first();
+                        }else if(nxt.nextSibling){
+                            nxt = nxt.nextSibling;
+                            notin = false;
+                        }else{
+                            nxt = nxt.parentNode;
+                            notin = true;
+                        }
+                    }
+                }
+                return $([]);
+            },
+
+            prevOf: function(type) {
+                var nxt = this.get(0);
+                var notin = true;
+                while(nxt){
+                    if($(nxt).is(type) && !notin) {
+                        return $([nxt]);
+                    }else{
+                        var found = $(nxt).find(type)
+                        if(!notin && found.length > 0){
+                            return found.last();
+                        }else if(nxt.previousSibling){
+                            nxt = nxt.previousSibling;
+                            notin = false;
+                        }else{
+                            nxt = nxt.parentNode;
+                            notin = true;
+                        }
+                    }
+                }
+                return $([]);
             }
         });
 

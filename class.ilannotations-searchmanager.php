@@ -61,7 +61,9 @@ class ILAnnotations_Searchmanager {
         //check all searches and add the the right array
         foreach ($s as $ss){
             $n = $ss->hasResult();
-            if($n == 1){
+            if($n === false){
+                return false;
+            }else if($n == 1){
                 $ok[] = $ss;
             }else if($n == 0){
                 $notfound[] = $ss;
@@ -69,7 +71,6 @@ class ILAnnotations_Searchmanager {
                 $multiplefound[] = $ss;
             }
         }
-        
         $oks = sizeof($ok);
         $notfounds = sizeof($notfound);
         $multiplefounds = sizeof($multiplefound);

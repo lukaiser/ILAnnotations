@@ -75,7 +75,7 @@ class ILAnnotations_Search {
         //Test if lazzysearch had the right one or if multiple are possilbe: TEST Other Multiple
         if($r == 1){
             if(preg_match_all($this->getRexString(), $this->text, $matches, PREG_OFFSET_CAPTURE+PREG_SET_ORDER, $matches[0][0][1]+1 ) == 0){
-                return(1);    
+                return(1);
             }else{
                 return(2);
             }
@@ -148,7 +148,7 @@ class ILAnnotations_Search {
         $b = $this->searchstringbefore;
         if($this->textbefore != ''){
             $ab = preg_split ( '/\W+/', $this->textbefore);
-            if(sizeof($ab)-$this->expandpos >= 0){
+            if(sizeof($ab)-$this->expandpos-1 >= 0){
                 if($b == ""){
                     $b = $ab[sizeof($ab)-$this->expandpos-1];
                 }else{
@@ -189,25 +189,25 @@ class ILAnnotations_Search {
      */
     public function getRexString(){
         if($this->searchstring != ""){
-            $s = preg_replace ('/\W+/', '(?:.|\n)*?', $this->searchstring);
+            $s = preg_replace ('/\W+/', '(?>.|\n)*?', $this->searchstring);
             if($this->borderworddeleted == 1){
-                $s = '(?:.|\n)*?'.$s.'(?:.|\n)*?';
+                $s = '(?>.|\n)*?'.$s.'(?>.|\n)*?';
             }
         }else{
-            $s = '(?:.|\n)*?';
+            $s = '(?>.|\n)*?';
         }
         if($this->searchstringbefore != ''){
-            $sb = preg_replace ('/\W+/', '(?:.|\n)*?', $this->searchstringbefore);
+            $sb = preg_replace ('/\W+/', '(?>.|\n)*?', $this->searchstringbefore);
             if($this->borderworddeleted != 1){
-                $sb = $sb.'(?:.|\n)*?';
+                $sb = $sb.'(?>.|\n)*?';
             }
         }else{
             $sb = "";    
         }
         if($this->searchstringafter != ''){
-            $sa = preg_replace ('/\W+/', '(?:.|\n)*?', $this->searchstringafter);
+            $sa = preg_replace ('/\W+/', '(?>.|\n)*?', $this->searchstringafter);
             if($this->searchstring != "" && $this->borderworddeleted != 1){
-                $sa = '(?:.|\n)*?'.$sa;
+                $sa = '(?>.|\n)*?'.$sa;
             }
         }else{
             $sa = "";    
